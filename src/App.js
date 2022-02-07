@@ -1,36 +1,35 @@
-import React, { Component } from 'react';
-import Ideas from './Ideas';
-import Form from './Form';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import useFetch from './useFetch';
+import Followers from './Followers';
+import Title from './Title';
+const url = 'https://api.github.com/users/john-smilga/followers?per_page=100';
+const App = () => {
+  const { loading, data } = useFetch(url);
+  const [page, setPage] = useState(0);
+  const [followers, setFollowers] = useState([]);
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      ideas: [
-      ]
+  useEffect(() => {
+    if (!loading) {
+      setFollowers(data[page]);
+      console.log(followers);
     }
-  }
+  }, [loading]);
 
-  addIdea = (newIdea) => {
-    this.setState({ ideas: [...this.state.ideas, newIdea] });
-  }
+  return (
+    <>
+      <main>
+        <Title loading={loading} />
 
-  deleteIdea = (id) => {
-    const filteredIdeas = this.state.ideas.filter(idea => idea.id !== id);
-
-    this.setState({ ideas: filteredIdeas });
-  }
-
-  render() {
-    return(
-      <main className='App'>
-        <h1>IdeaBox</h1>
-        <Form addIdea={this.addIdea} />
-        <Ideas ideas={this.state.ideas} deleteIdea={this.deleteIdea} />
+        <section className="followers">
+          <div className="container">
+            {followers.map((follower) => {
+              return <Followers key={follower.id} {...follower} />;
+            })}
+          </div>
+        </section>
       </main>
-    )
-  }
-}
+    </>
+  );
+};
 
 export default App;
