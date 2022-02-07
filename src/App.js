@@ -5,6 +5,7 @@ import Title from './Title';
 const url = 'https://api.github.com/users/john-smilga/followers?per_page=100';
 const App = () => {
   const { loading, data } = useFetch(url);
+  console.log(data);
   const [page, setPage] = useState(0);
   const [followers, setFollowers] = useState([]);
 
